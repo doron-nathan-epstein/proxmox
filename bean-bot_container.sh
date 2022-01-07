@@ -129,7 +129,7 @@ esac
 DISK=${DISK_PREFIX:-vm}-${CTID}-disk-0${DISK_EXT-}
 ROOTFS=${STORAGE}:${DISK_REF-}${DISK}
 
-msg "Creating LXC..."
+msg "Creating LXC container..."
 DISK_SIZE=1G
 pvesm alloc $STORAGE $CTID $DISK $DISK_SIZE --format ${DISK_FORMAT:-raw} >/dev/null
 if [ "$STORAGE_TYPE" == "zfspool" ]; then
@@ -148,7 +148,7 @@ MOUNT=$(pct mount $CTID | cut -d"'" -f 2)
 ln -fs $(readlink /etc/localtime) ${MOUNT}/etc/localtime
 pct unmount $CTID && unset MOUNT
 
-msg "Starting LXC..."
+msg "Starting LXC container..."
 pct start $CTID
 pct push $CTID bean-bot_setup.sh /bean-bot_setup.sh -perms 755
 pct exec $CTID /bean-bot_setup.sh
