@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 while true; do
-    read -p "This will create a New Discord Bean-Bot LXC. Proceed(y/n)?" yn
+    read -p "This will create a New Discord Bean-Bot LXC Container. Proceed(y/n)?" yn
     case $yn in
         [Yy]* ) break;;
         [Nn]* ) exit;;
@@ -9,10 +9,11 @@ while true; do
     esac
 done
 
-set -o errexit  
-set -o errtrace 
-set -o nounset  
-set -o pipefail 
+# Setup script environment
+set -o errexit  #Exit immediately if a pipeline returns a non-zero status
+set -o errtrace #Trap ERR from shell functions, command substitutions, and commands from subshell
+set -o nounset  #Treat unset variables as an error
+set -o pipefail #Pipe will exit with last non-zero status if applicable
 shopt -s expand_aliases
 alias die='EXIT=$? LINE=$LINENO error_exit'
 trap die ERR
@@ -72,10 +73,13 @@ function load_module() {
 TEMP_DIR=$(mktemp -d)
 pushd $TEMP_DIR >/dev/null
 
+# Download setup script
 wget -qL https://raw.githubusercontent.com/doron-nathan-epstein/Proxmox/main/bean-bot_setup.sh
 
+# Detect modules and automatically load at boot
 load_module overlay
 
+# Select storage location
 while read -r line; do
   TAG=$(echo $line | awk '{print $1}')
   TYPE=$(echo $line | awk '{printf "%-10s", $2}')
@@ -102,9 +106,11 @@ else
 fi
 info "Using '$STORAGE' for storage location."
 
+# Get the next guest VM/LXC ID
 CTID=$(pvesh get /cluster/nextid)
-info "LXC ID is $CTID."
+info "Container ID is $CTID."
 
+# Download latest Debian 11 LXC template
 msg "Updating LXC template list..."
 pveam update >/dev/null
 msg "Downloading LXC template..."
@@ -115,6 +121,7 @@ TEMPLATE="${TEMPLATES[-1]}"
 pveam download local $TEMPLATE >/dev/null ||
   die "A problem occured while downloading the LXC template."
 
+# Create variables for container disk
 STORAGE_TYPE=$(pvesm status -storage $STORAGE | awk 'NR>1 {print $2}')
 case $STORAGE_TYPE in
   dir|nfs)
@@ -129,6 +136,7 @@ esac
 DISK=${DISK_PREFIX:-vm}-${CTID}-disk-0${DISK_EXT-}
 ROOTFS=${STORAGE}:${DISK_REF-}${DISK}
 
+# Create LXC
 msg "Creating LXC container..."
 DISK_SIZE=2G
 pvesm alloc $STORAGE $CTID $DISK $DISK_SIZE --format ${DISK_FORMAT:-raw} >/dev/null
@@ -138,20 +146,23 @@ else
   mkfs.ext4 $(pvesm path $ROOTFS) &>/dev/null
 fi
 ARCH=$(dpkg --print-architecture)
-HOSTNAME=bean-bot
+HOSTNAME=debian11
 TEMPLATE_STRING="local:vztmpl/${TEMPLATE}"
 pct create $CTID $TEMPLATE_STRING -arch $ARCH -features nesting=1 \
-  -hostname $HOSTNAME -net0 name=eth0,bridge=vmbr0,ip=dhcp -onboot 1 -cores 1 -memory 512 \
+  -hostname $HOSTNAME -net0 name=eth0,bridge=vmbr0,ip=dhcp -onboot 1 -cores 1 -memory 512\
   -ostype $OSTYPE -rootfs $ROOTFS,size=$DISK_SIZE -storage $STORAGE >/dev/null
 
+# Set container timezone to match host
 MOUNT=$(pct mount $CTID | cut -d"'" -f 2)
 ln -fs $(readlink /etc/localtime) ${MOUNT}/etc/localtime
 pct unmount $CTID && unset MOUNT
 
+# Setup container
 msg "Starting LXC container..."
 pct start $CTID
 pct push $CTID bean-bot_setup.sh /bean-bot_setup.sh -perms 755
 pct exec $CTID /bean-bot_setup.sh
 
+# Get network details and show completion message
 IP=$(pct exec $CTID ip a s dev eth0 | sed -n '/inet / s/\// /p' | awk '{print $2}')
-info "Successfully created a Discord Bean-Bot LXC to $CTID at IP Address ${IP}"
+info "Successfully created a Discord Bean-Bot LXC Container to $CTID at IP Address ${IP}"
