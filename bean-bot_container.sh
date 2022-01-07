@@ -108,8 +108,8 @@ info "LXC ID is $CTID."
 msg "Updating LXC template list..."
 pveam update >/dev/null
 msg "Downloading LXC template..."
-OSTYPE=debian
-OSVERSION=${OSTYPE}-11
+OSTYPE=turnkey-nodejs
+OSVERSION=${OSTYPE}-16.1
 mapfile -t TEMPLATES < <(pveam available -section system | sed -n "s/.*\($OSVERSION.*\)/\1/p" | sort -t - -k 2 -V)
 TEMPLATE="${TEMPLATES[-1]}"
 pveam download local $TEMPLATE >/dev/null ||
@@ -130,7 +130,7 @@ DISK=${DISK_PREFIX:-vm}-${CTID}-disk-0${DISK_EXT-}
 ROOTFS=${STORAGE}:${DISK_REF-}${DISK}
 
 msg "Creating LXC..."
-DISK_SIZE=512M
+DISK_SIZE=1G
 pvesm alloc $STORAGE $CTID $DISK $DISK_SIZE --format ${DISK_FORMAT:-raw} >/dev/null
 if [ "$STORAGE_TYPE" == "zfspool" ]; then
   warn "Some containers may not work properly due to ZFS not supporting 'fallocate'."
