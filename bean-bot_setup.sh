@@ -40,11 +40,26 @@ msg "Installing prerequisites..."
 apt-get -qqy install \
     curl \
     sudo &>/dev/null
-    
-# Installing npm & node-js
-msg "Installing npm & node-js..."
-sudo apt-get update >/dev/null
-sudo apt-get install -y npm nodejs &>/dev/null
+
+# Installing git
+msg "Installing git..."
+apt-get install git -y &>/dev/null
+ 
+# Installing npm
+msg "Installing npm..."
+apt-get install npm -y &>/dev/null
+
+# Installing node-js
+msg "Installing node-js..."
+apt-get install nodejs -y &>/dev/null
+
+# Installing npm dependencies
+msg "Installing npm dependencies..."
+npm install pm2 -g &>/dev/null
+
+git clone https://github.com/doron-nathan-epstein/bean-bot.git bean-bot
+cd bean-bot
+npm install
 
 # Customize container
 msg "Customizing container..."
@@ -63,4 +78,4 @@ systemctl restart $(basename $(dirname $GETTY_OVERRIDE) | sed 's/\.d//')
 
 # Cleanup container
 msg "Cleanup..."
-rm -rf /debian11_setup.sh /var/{cache,log}/* /var/lib/apt/lists/*
+rm -rf /bean-bot_setup.sh /var/{cache,log}/* /var/lib/apt/lists/*
