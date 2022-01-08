@@ -161,7 +161,7 @@ pct unmount $CTID && unset MOUNT
 msg "Starting LXC container..."
 pct start $CTID
 pct push $CTID bean-bot_setup.sh /bean-bot_setup.sh -perms 755
-pct exec $CTID /bean-bot_setup.sh
+pct exec $CTID /bean-bot_setup.sh $BEANBOT_BLIZZARD_CLIENTID $BEANBOT_BLIZZARD_CLIENTSECRET $BEANBOT_BOT_TOKEN $BEANBOT_DB_CONNECTION
 
 # Get network details and show completion message
 IP=$(pct exec $CTID ip a s dev eth0 | sed -n '/inet / s/\// /p' | awk '{print $2}')
