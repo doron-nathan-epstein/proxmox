@@ -10,6 +10,11 @@ alias die='EXIT=$? LINE=$LINENO error_exit'
 trap die ERR
 trap 'die "Script interrupted."' INT
 
+export BLIZZARD_CLIENTID=$1
+export BLIZZARD_CLIENTSECRET=$2
+export BOT_TOKEN=$3
+export BDB_CONNECTION=$4
+
 function error_exit() {
   trap - ERR
   local DEFAULT='Unknown failure occured.'
