@@ -53,13 +53,19 @@ apt-get install npm -y &>/dev/null
 msg "Installing node-js..."
 apt-get install nodejs -y &>/dev/null
 
-# Installing npm dependencies
-msg "Installing npm dependencies..."
+# Installing pm2
+msg "Installing pm2..."
 npm install pm2 -g &>/dev/null
 
+# Setting up bean-bot source code
 git clone https://github.com/doron-nathan-epstein/bean-bot.git bean-bot
 cd bean-bot
 npm install
+
+# Setting up pm2
+msg "Setting up pm2..."
+pm2 start index.js
+sudo env PATH=$PATH:/usr/local/bin pm2 startup -u root
 
 # Customize container
 msg "Customizing container..."
