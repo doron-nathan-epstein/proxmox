@@ -73,9 +73,9 @@ cd bean-bot
 npm install
 
 # Setting up pm2
-msg "Setting up pm2..."
-pm2 start index.js
-sudo env PATH=$PATH:/usr/local/bin pm2 startup -u root
+#msg "Setting up pm2..."
+#pm2 start index.js
+#sudo env PATH=$PATH:/usr/local/bin pm2 startup -u root
 
 # Customize container
 msg "Customizing container..."
