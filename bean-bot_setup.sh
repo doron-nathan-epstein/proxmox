@@ -10,10 +10,10 @@ alias die='EXIT=$? LINE=$LINENO error_exit'
 trap die ERR
 trap 'die "Script interrupted."' INT
 
-export BLIZZARD_CLIENTID=$1
-export BLIZZARD_CLIENTSECRET=$2
-export BOT_TOKEN=$3
-export BDB_CONNECTION=$4
+sudo env BLIZZARD_CLIENTID=$1
+sudo env BLIZZARD_CLIENTSECRET=$2
+sudo env BOT_TOKEN=$3
+sudo env BDB_CONNECTION=$4
 
 function error_exit() {
   trap - ERR
@@ -48,19 +48,19 @@ apt-get -qqy install \
 
 # Installing git
 msg "Installing git..."
-apt-get install git -y &>/dev/null
+apt-get install git -y sudo &>/dev/null
  
 # Installing npm
 msg "Installing npm..."
-apt-get install npm -y &>/dev/null
+apt-get install npm -y sudo &>/dev/null
 
 # Installing node-js
 msg "Installing node-js..."
-apt-get install nodejs -y &>/dev/null
+apt-get install nodejs -y sudo &>/dev/null
 
 # Installing pm2
 msg "Installing pm2..."
-npm install pm2 -g &>/dev/null
+npm install pm2 -g sudo &>/dev/null
 
 # Setting up bean-bot source code
 git clone https://github.com/doron-nathan-epstein/bean-bot.git bean-bot
