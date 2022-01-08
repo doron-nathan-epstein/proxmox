@@ -43,27 +43,28 @@ apt-get -qqy install \
 
 # Installing git
 msg "Installing git..."
-apt-get install git -y sudo &>/dev/null
+apt-get install git -y &>/dev/null
  
 # Installing npm
 msg "Installing npm..."
-apt-get install npm -y sudo &>/dev/null
+apt-get install npm -y &>/dev/null
 
 # Installing node-js
 msg "Installing node-js..."
-apt-get install nodejs -y sudo &>/dev/null
+apt-get install nodejs -y &>/dev/null
 
 # Installing pm2
 msg "Installing pm2..."
-npm install pm2 -g sudo &>/dev/null
+npm install pm2 -g &>/dev/null
 
-# Setting up base profile
-msg "Setting up base profile..."
+# Setting up environment variables
+msg "Setting up environment variables..."
 cat << EOF > ~/.bash_profile
 export BLIZZARD_CLIENTID=$1
 export BLIZZARD_CLIENTSECRET=$2
 export BOT_TOKEN=$3
-export BDB_CONNECTION=$4
+export DB_CONNECTION=$4
+export PATH=$PATH:/usr/local/lib:/usr/local/bin pm2 startup -u root
 EOF
 source ~/.bash_profile
 
@@ -73,9 +74,8 @@ cd bean-bot
 npm install
 
 # Setting up pm2
-#msg "Setting up pm2..."
-#pm2 start index.js
-#sudo env PATH=$PATH:/usr/local/bin pm2 startup -u root
+msg "Setting up pm2..."
+pm2 start index.js
 
 # Customize container
 msg "Customizing container..."
