@@ -10,11 +10,6 @@ alias die='EXIT=$? LINE=$LINENO error_exit'
 trap die ERR
 trap 'die "Script interrupted."' INT
 
-#env BLIZZARD_CLIENTID=$1
-#env BLIZZARD_CLIENTSECRET=$2
-#env BOT_TOKEN=$3
-#env BDB_CONNECTION=$4
-
 function error_exit() {
   trap - ERR
   local DEFAULT='Unknown failure occured.'
@@ -61,6 +56,15 @@ apt-get install nodejs -y sudo &>/dev/null
 # Installing pm2
 msg "Installing pm2..."
 npm install pm2 -g sudo &>/dev/null
+
+# Setting up base profile
+msg "Setting up base profile..."
+echo "export PATH=$PATH:/opt/nodejs/lib/node_modules/pm2/bin" \
+"export BLIZZARD_CLIENTID=$1" \
+"export BLIZZARD_CLIENTSECRET=$2" \
+"export BOT_TOKEN=$3" \
+"export BDB_CONNECTION=$4" > ~/.bash_profile
+source ~/.bash_profile
 
 # Setting up bean-bot source code
 git clone https://github.com/doron-nathan-epstein/bean-bot.git bean-bot
