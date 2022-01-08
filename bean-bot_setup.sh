@@ -59,11 +59,12 @@ npm install pm2 -g sudo &>/dev/null
 
 # Setting up base profile
 msg "Setting up base profile..."
-echo "export PATH=$PATH:/opt/nodejs/lib/node_modules/pm2/bin" \
-"export BLIZZARD_CLIENTID=$1" \
-"export BLIZZARD_CLIENTSECRET=$2" \
-"export BOT_TOKEN=$3" \
-"export BDB_CONNECTION=$4" > ~/.bash_profile
+cat << 'EOF' >> ~/.bash_profile
+export BLIZZARD_CLIENTID=$1
+export BLIZZARD_CLIENTSECRET=$2
+export BOT_TOKEN=$3
+export BDB_CONNECTION=$4
+EOF
 source ~/.bash_profile
 
 # Setting up bean-bot source code
