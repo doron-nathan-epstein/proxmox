@@ -59,7 +59,7 @@ npm install pm2 -g sudo &>/dev/null
 
 # Setting up base profile
 msg "Setting up base profile..."
-cat << 'EOF' >> ~/.bash_profile
+cat << EOF > ~/.bash_profile
 export BLIZZARD_CLIENTID=$1
 export BLIZZARD_CLIENTSECRET=$2
 export BOT_TOKEN=$3
@@ -73,9 +73,9 @@ cd bean-bot
 npm install
 
 # Setting up pm2
-msg "Setting up pm2..."
-pm2 start index.js
-sudo env PATH=$PATH:/usr/local/bin pm2 startup -u root
+#msg "Setting up pm2..."
+#pm2 start index.js
+#sudo env PATH=$PATH:/usr/local/bin pm2 startup -u root
 
 # Customize container
 msg "Customizing container..."
