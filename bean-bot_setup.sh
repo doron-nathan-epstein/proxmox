@@ -64,7 +64,6 @@ export BLIZZARD_CLIENTID=$1
 export BLIZZARD_CLIENTSECRET=$2
 export BOT_TOKEN=$3
 export DB_CONNECTION=$4
-export PATH=$PATH:/usr/local/lib:/usr/local/bin pm2 startup -u root
 EOF
 source ~/.bash_profile
 
@@ -76,6 +75,7 @@ npm install
 # Setting up pm2
 msg "Setting up pm2..."
 pm2 start index.js
+sudo env PATH=$PATH:/usr/local/bin pm2 startup -u root
 
 # Customize container
 msg "Customizing container..."
