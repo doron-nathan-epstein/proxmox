@@ -160,7 +160,7 @@ pct unmount $CTID && unset MOUNT
 # Setup container
 msg "Starting LXC container..."
 pct start $CTID
-pct exec $CTID "apk add --no-cache bash"
+pct exec $CTID "apk add bash"
 pct push $CTID alpine_setup.sh /alpine_setup.sh -perms 755
 pct exec $CTID /alpine_setup.sh
 
