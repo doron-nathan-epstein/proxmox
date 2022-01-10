@@ -114,8 +114,8 @@ info "Container ID is $CTID."
 msg "Updating LXC template list..."
 pveam update >/dev/null
 msg "Downloading LXC template..."
-OSTYPE=debian
-OSVERSION=${OSTYPE}-11
+OSTYPE=alpine
+OSVERSION=${OSTYPE}-3
 mapfile -t TEMPLATES < <(pveam available -section system | sed -n "s/.*\($OSVERSION.*\)/\1/p" | sort -t - -k 2 -V)
 TEMPLATE="${TEMPLATES[-1]}"
 pveam download local $TEMPLATE >/dev/null ||
