@@ -41,18 +41,6 @@ apt-get -qqy install \
     curl \
     sudo &>/dev/null
 
-# Installing git
-msg "Installing git..."
-apt-get install git -y &>/dev/null
- 
-# Installing npm
-msg "Installing npm..."
-apt-get install npm -y &>/dev/null
-
-# Installing node-js
-msg "Installing node-js..."
-apt-get install nodejs -y &>/dev/null
-
 # Customize container
 msg "Customizing container..."
 rm /etc/motd # Remove message of the day after login
