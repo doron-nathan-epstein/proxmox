@@ -25,8 +25,8 @@ function msg() {
 
 # Prepare container OS
 msg "Setting up container OS..."
-sed -i "/$LANG/ s/\(^# \)//" /etc/locale.gen
-locale-gen >/dev/null
+#sed -i "/$LANG/ s/\(^# \)//" /etc/locale.gen
+#locale-gen >/dev/null
 apt-get -y purge openssh-{client,server} >/dev/null
 apt-get autoremove >/dev/null
 
